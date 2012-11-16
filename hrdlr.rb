@@ -29,11 +29,14 @@ class Frame
   end
 
   def render
+    print "\033[0;0H"
     @rows.each do |row|
       puts row
     end
   end
 end
+
+print "\033[2J"
 
 frame = Frame.new 80, 6
 frame.draw 0, 0, Sprite.track_line
