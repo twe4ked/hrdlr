@@ -91,15 +91,33 @@ class Frame
   end
 
   def render
-    print "\033[0;0H"
-    @rows.each do |row|
-      puts row
+    @rows.each_with_index do |row, i|
+      Frame.move_cursor 0, i
+      print row
+    end
+  end
+
+  def self.move_cursor(x, y)
+    print "\033[#{y+1};#{x+1}H"
+  end
+
+  def self.clear_screen
+    print "\033[2J"
+  end
+
+  def self.setup
+    clear_screen
+
+    $stdin.raw!
+    at_exit do
+      puts "\r"
+      $stdin.cooked!
     end
   end
 end
 
 if $0 == __FILE__
-  print "\033[2J"
+  Frame.setup
 
   player = Player.new
   track = Track.new
