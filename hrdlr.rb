@@ -98,22 +98,24 @@ class Frame
   end
 end
 
-print "\033[2J"
+if $0 == __FILE__
+  print "\033[2J"
 
-player = Player.new
-track = Track.new
+  player = Player.new
+  track = Track.new
 
-while true do
-  player.tick
+  while true do
+    player.tick
 
-  frame = Frame.new 80, 6
-  frame.draw 0, 0, Sprite.track_line
-  frame.draw 0, 5, Sprite.track_line
-  frame.draw 4, 2, Sprite.player(player.state)
-  track.get_hurdles(0..80).each do |position|
-    frame.draw position-player.position, 4, Sprite.hurdle
+    frame = Frame.new 80, 6
+    frame.draw 0, 0, Sprite.track_line
+    frame.draw 0, 5, Sprite.track_line
+    frame.draw 4, 2, Sprite.player(player.state)
+    track.get_hurdles(0..80).each do |position|
+      frame.draw position-player.position, 4, Sprite.hurdle
+    end
+    frame.render
+
+    sleep 0.5
   end
-  frame.render
-
-  sleep 0.5
 end
