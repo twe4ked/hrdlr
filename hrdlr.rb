@@ -1,3 +1,23 @@
+class Player
+  attr_reader :position, :state
+
+  def initialize
+    @position = 0
+    @state = 'normal'
+  end
+
+  def tick
+    @position += 1
+    @state = %w[normal run][self.position % 2]
+  end
+end
+
+class Track
+  def get_hurdles(range)
+    [20, 30, 40, 55]
+  end
+end
+
 class Sprite
   def self.player_normal
     <<-SPRITE.gsub(/^ {4}/, '')
@@ -5,6 +25,26 @@ class Sprite
     <|-
     / >
     SPRITE
+  end
+
+  def self.player_run
+    <<-SPRITE.gsub(/^ {4}/, '')
+     O
+    /|-
+    --\\
+    SPRITE
+  end
+
+  def self.player_jump
+    <<-SPRITE.gsub(/^ {4}/, '')
+     o/
+    /|
+    ---
+    SPRITE
+  end
+
+  def self.player(state)
+    send "player_#{state}"
   end
 
   def self.hurdle
@@ -38,9 +78,20 @@ end
 
 print "\033[2J"
 
-frame = Frame.new 80, 6
-frame.draw 0, 0, Sprite.track_line
-frame.draw 0, 5, Sprite.track_line
-frame.draw 4, 2, Sprite.player_normal
-frame.draw 10, 4, Sprite.hurdle
-frame.render
+player = Player.new
+track = Track.new
+
+while true do
+  player.tick
+
+  frame = Frame.new 80, 6
+  frame.draw 0, 0, Sprite.track_line
+  frame.draw 0, 5, Sprite.track_line
+  frame.draw 4, 2, Sprite.player(player.state)
+  track.get_hurdles(0..80).each do |position|
+    frame.draw position-player.position, 4, Sprite.hurdle
+  end
+  frame.render
+
+  sleep 0.5
+end
