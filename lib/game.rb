@@ -62,10 +62,10 @@ class Game
   end
 
   def draw_score(frame)
-    frame.draw_right frame.width-6, 1, 'High score:'
-    frame.draw_right frame.width-1, 1, player.high_score.to_s
-    frame.draw_right frame.width-6, 2, 'Score:'
-    frame.draw_right frame.width-1, 2, player.score.to_s
+    frame.draw_right frame.width-7, 1, 'High score:'
+    frame.draw_right frame.width-2, 1, player.high_score.to_s
+    frame.draw_right frame.width-7, 2, 'Score:'
+    frame.draw_right frame.width-2, 2, player.score.to_s
   end
 
   def draw_other_scores(frame)
