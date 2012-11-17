@@ -10,7 +10,7 @@ class Sprite
   def self.player_run
     <<-SPRITE.gsub(/^ {4}/, '')
      o
-    /|-
+    /|~
     --\\
     SPRITE
   end
