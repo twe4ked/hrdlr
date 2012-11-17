@@ -1,16 +1,21 @@
+require 'socket'
+require 'yaml'
 require 'sprite'
 require 'player'
 require 'track'
 require 'frame'
+require 'other_player'
 require 'sound'
 
 class Game
   attr_reader :track, :player, :tick_count
+  attr_reader :others
 
   def initialize
     @track = Track.new(50, 17)
     @player = Player.new track
     @tick_count = 0
+    @others = {}
   end
 
   def tick
@@ -19,13 +24,14 @@ class Game
   end
 
   def render
-    frame = Frame.new 80, 6
+    frame = Frame.new 80, 20
 
     draw_track(frame)
     draw_player(frame)
     draw_hurdles(frame)
     draw_title(frame)
     draw_score(frame)
+    draw_other_scores(frame)
 
     frame.render
   end
@@ -61,8 +67,50 @@ class Game
     frame.draw_right 79, 2, player.score.to_s
   end
 
+  def draw_other_scores(frame)
+    top_ten = @others.values.sort_by(&:score).reverse.first(10)
+    top_ten.each_with_index do |other, index|
+      frame.draw 0, 7+index, " #{index+1}. #{other}"
+    end
+  end
+
   def viewport_x
     player.x - 4
+  end
+
+  def open_socket
+    @socket = UDPSocket.new
+    @socket.bind '0.0.0.0', 47357
+    @socket.setsockopt Socket::SOL_SOCKET, Socket::SO_REUSEADDR, true
+    @socket.setsockopt Socket::SOL_SOCKET, Socket::SO_BROADCAST, true
+  rescue Errno::EADDRINUSE
+    $stderr.puts "Game is already running."
+    exit 1
+  end
+
+  def receive_updates
+    loop do
+      begin
+        data, addr = @socket.recvfrom_nonblock 8192
+        data = YAML.load(data)
+        @others[addr] = OtherPlayer.new(data)
+      rescue Psych::SyntaxError
+      end
+    end
+  rescue Errno::EAGAIN
+  end
+
+  def hostname
+    @@hostname ||= `hostname -s`.strip
+  end
+
+  def send_update
+    data = {
+      hostname: self.hostname,
+      score: self.player.score,
+      high_score: self.player.high_score
+    }
+    @socket.send data.to_yaml, 0, '255.255.255.255', 47357
   end
 
   def joystick
@@ -81,6 +129,7 @@ class Game
   end
 
   def insert_coin
+    open_socket
     Frame.setup
 
     while true do
@@ -91,6 +140,8 @@ class Game
       render
       sleep 0.1
       joystick
+      send_update if tick_count % 10 == 0
+      receive_updates
     end
   end
 end
