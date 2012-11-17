@@ -66,6 +66,7 @@ class Frame
       puts "\r"
       enable_cursor
       $stdin.cooked!
+      system 'stty sane'
     end
   end
 end
