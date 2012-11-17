@@ -125,12 +125,22 @@ class Frame
     print "\033[2J"
   end
 
+  def self.disable_cursor
+    print "\x1B[?25l"
+  end
+
+  def self.enable_cursor
+    print "\x1B[?25h"
+  end
+
   def self.setup
     clear_screen
+    disable_cursor
 
     $stdin.raw!
     at_exit do
       puts "\r"
+      enable_cursor
       $stdin.cooked!
     end
   end
