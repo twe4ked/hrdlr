@@ -1,15 +1,20 @@
 class Track
-  attr_reader :initial, :step
+  attr_reader :initial, :step_range
 
-  def initialize(initial, step)
+  def initialize(initial, step_range)
     @initial = initial
-    @step = step
+    @step_range = step_range
+    @hurdles = [self.initial]
   end
 
   def get_hurdles(range)
     return [] if range.min.nil?
-    from = range.min - ((range.min - self.initial) % step)
-    to = range.max
-    (from..to).step(self.step).select { |x| x >= self.initial && x >= range.min }
+    while @hurdles.last < range.max
+      @hurdles << @hurdles.last + rand(self.step_range)
+    end
+    if @hurdles.size > 100
+      @hurdles = @hurdles[-100..-1]
+    end
+    @hurdles.select { |x| range.cover?(x) }
   end
 end
