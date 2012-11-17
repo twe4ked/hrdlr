@@ -9,16 +9,21 @@ class Player
 
   def tick
     @x += 1
+
     if @jump_pos
-      @jump_pos += 1
-      @state = 'jump'
-      if @jump_pos >= 4
+      if @jump_pos < 4
+        @jump_pos += 1
+      else
         @jump_pos = nil
         @y = 0
-        @state = %w[normal run][self.x % 2]
       end
+    end
+
+    @state = case
+    when @jump_pos
+      'jump'
     else
-      @state = %w[normal run][self.x % 2]
+      %w[normal run][self.x % 2]
     end
   end
 
