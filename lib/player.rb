@@ -19,7 +19,7 @@ class Player
     end
 
     case
-    when @falling_pos && @falling_pos < 8
+    when @falling_pos && @falling_pos < 16
       @falling_pos += 1
       @x += 1 if @falling_pos < 5
     when !@falling_pos && will_collide?
@@ -38,6 +38,10 @@ class Player
       'jump'
     when @falling_pos == 0
       'falling'
+    when @falling_pos && @falling_pos > 12
+      %w[normal hidden][@falling_pos % 2]
+    when @falling_pos && @falling_pos > 8
+      %w[recover hidden][@falling_pos % 2]
     when @falling_pos
       'fallen'
     else
