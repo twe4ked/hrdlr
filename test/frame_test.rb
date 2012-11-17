@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'frame'
 
 class FrameTest < MiniTest::Unit::TestCase
   def test_draw_in_range
