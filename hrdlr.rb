@@ -166,12 +166,14 @@ if $0 == __FILE__
 
     sleep 0.5
     begin
-      key = $stdin.read_nonblock(1).ord
-      case key
-      when 27 # escape
-        exit
-      when 32 # space
-        player.jump
+      loop do
+        key = $stdin.read_nonblock(1).ord
+        case key
+        when 27 # escape
+          exit
+        when 32 # space
+          player.jump
+        end
       end
     rescue Errno::EAGAIN
     end
