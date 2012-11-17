@@ -1,16 +1,34 @@
 require 'io/console'
 
 class Player
-  attr_reader :position, :state
+  attr_reader :x, :y, :state
 
   def initialize
-    @position = 0
+    @x = 0
+    @y = 0
     @state = 'normal'
   end
 
   def tick
-    @position += 1
-    @state = %w[normal run][self.position % 2]
+    @x += 1
+    if @jump_pos
+      @jump_pos += 1
+      @state = 'jump'
+      if @jump_pos >= 4
+        @jump_pos = nil
+        @y = 0
+        @state = %w[normal run][self.x % 2]
+      end
+    else
+      @state = %w[normal run][self.x % 2]
+    end
+  end
+
+  def jump
+    unless @jump_pos
+      @jump_pos = 0
+      @y = 1
+    end
   end
 end
 
@@ -130,9 +148,9 @@ if $0 == __FILE__
     frame = Frame.new 80, 6
     frame.draw 0, 0, Sprite.track_line
     frame.draw 0, 5, Sprite.track_line
-    frame.draw 4, 2, Sprite.player(player.state)
+    frame.draw 4, 2-player.y, Sprite.player(player.state)
     track.get_hurdles(0..80).each do |position|
-      frame.draw position-player.position, 4, Sprite.hurdle
+      frame.draw position-player.x, 4, Sprite.hurdle
     end
     frame.render
 
@@ -142,6 +160,8 @@ if $0 == __FILE__
       case key
       when 27 # escape
         exit
+      when 32 # space
+        player.jump
       end
     rescue Errno::EAGAIN
     end
