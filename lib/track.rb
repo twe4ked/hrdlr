@@ -12,8 +12,8 @@ class Track
     while @hurdles.last < range.max
       @hurdles << @hurdles.last + rand(self.step_range)
     end
-    if @hurdles.size > 100
-      @hurdles = @hurdles[-100..-1]
+    if @hurdles.size > 1000
+      @hurdles = @hurdles[-1000..-1]
     end
     @hurdles.select { |x| range.cover?(x) }
   end
