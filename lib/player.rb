@@ -1,11 +1,15 @@
 class Player
   attr_reader :track, :x, :y, :state
+  attr_reader :score, :high_score
 
   def initialize(track)
     @track = track
     @x = 0
     @y = 0
     @state = 'normal'
+    @score = 0
+    @high_score = 0
+    @score_start = 0
   end
 
   def tick
@@ -25,6 +29,8 @@ class Player
     when !@falling_pos && will_collide?
       @falling_pos = 0
       @x += 1
+      @score_start = @x+self.width
+      @score = 0
     else
       @falling_pos = nil
     end
@@ -47,6 +53,8 @@ class Player
     else
       %w[normal normal run run][self.x % 4]
     end
+
+    update_score
   end
 
   def jump
@@ -71,5 +79,10 @@ class Player
   def will_collide?
     range = self.x+2..self.x+self.width
     !jumping? && !track.get_hurdles(range).empty?
+  end
+
+  def update_score
+    @score = self.track.get_hurdles(@score_start..@x).size
+    @high_score = [@high_score, @score].max
   end
 end

@@ -24,6 +24,7 @@ class Game
     draw_player(frame)
     draw_hurdles(frame)
     draw_title(frame)
+    draw_score(frame)
 
     frame.render
   end
@@ -50,6 +51,13 @@ class Game
         frame.draw_center 2, 'Press <Space> to jump!'
       end
     end
+  end
+
+  def draw_score(frame)
+    frame.draw_right 74, 1, 'High score:'
+    frame.draw_right 79, 1, player.high_score.to_s
+    frame.draw_right 74, 2, 'Score:'
+    frame.draw_right 79, 2, player.score.to_s
   end
 
   def viewport_x

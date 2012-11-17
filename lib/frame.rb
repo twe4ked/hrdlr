@@ -41,6 +41,11 @@ class Frame
     draw x, y, sprite
   end
 
+  def draw_right(x, y, sprite)
+    sprite_width = sprite.split("\n").first.size
+    draw x-sprite_width+1, y, sprite
+  end
+
   def render
     @rows.each_with_index do |row, i|
       Frame.move_cursor 0, i

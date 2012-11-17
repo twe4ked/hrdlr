@@ -7,6 +7,7 @@ class Track
   end
 
   def get_hurdles(range)
+    return [] if range.min.nil?
     from = range.min - ((range.min - self.initial) % step)
     to = range.max
     (from..to).step(self.step).select { |x| x >= self.initial && x >= range.min }
