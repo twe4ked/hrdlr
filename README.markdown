@@ -1,3 +1,5 @@
 # hrdlr
 
-TODO: Add a sweet README.
+``` sh
+ruby ./hrdlr.rb
+```
