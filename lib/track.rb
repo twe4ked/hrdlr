@@ -1,20 +1,9 @@
+require 'items'
+
 class Track
-  attr_reader :initial, :step_range
+  attr_reader :hurdles
 
-  def initialize(initial, step_range)
-    @initial = initial
-    @step_range = step_range
-    @hurdles = [self.initial]
-  end
-
-  def get_hurdles(range)
-    return [] if range.min.nil?
-    while @hurdles.last < range.max
-      @hurdles << @hurdles.last + rand(self.step_range)
-    end
-    if @hurdles.size > 1000
-      @hurdles = @hurdles[-1000..-1]
-    end
-    @hurdles.select { |x| range.cover?(x) }
+  def initialize
+    @hurdles = Items.new 50, 10..20
   end
 end

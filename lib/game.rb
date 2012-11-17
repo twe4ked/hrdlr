@@ -12,7 +12,7 @@ class Game
   attr_reader :others
 
   def initialize
-    @track = Track.new(50, 10..20)
+    @track = Track.new
     @player = Player.new track
     @tick_count = 0
     @others = {}
@@ -47,7 +47,7 @@ class Game
   end
 
   def draw_hurdles(frame)
-    track.get_hurdles(viewport_x...viewport_x+frame.width).each do |hurdle_x|
+    track.hurdles.get(viewport_x...viewport_x+frame.width).each do |hurdle_x|
       frame.draw hurdle_x-viewport_x, 4, Sprite.hurdle
     end
   end

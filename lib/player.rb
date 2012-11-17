@@ -81,12 +81,12 @@ class Player
 
   def will_collide?
     range = self.x+2..self.x+self.width
-    !jumping? && !track.get_hurdles(range).empty?
+    !jumping? && !track.hurdles.get(range).empty?
   end
 
   def update_score
     old_score = @score
-    @score = self.track.get_hurdles(@score_start..@x).size
+    @score = self.track.hurdles.get(@score_start..@x).size
     if @score == @high_score + 1 && @high_score != 0 && @score != old_score
       Sound.play('high_score')
     end
