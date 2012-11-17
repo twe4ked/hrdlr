@@ -1,3 +1,5 @@
+require 'io/console'
+
 class Player
   attr_reader :position, :state
 
@@ -135,5 +137,13 @@ if $0 == __FILE__
     frame.render
 
     sleep 0.5
+    begin
+      key = $stdin.read_nonblock(1).ord
+      case key
+      when 27 # escape
+        exit
+      end
+    rescue Errno::EAGAIN
+    end
   end
 end
