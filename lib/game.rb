@@ -2,6 +2,7 @@ require 'sprite'
 require 'player'
 require 'track'
 require 'frame'
+require 'sound'
 
 class Game
   attr_reader :track, :player, :tick_count
@@ -84,6 +85,9 @@ class Game
 
     while true do
       tick
+
+      Sound.play('intro') if tick_count == 1
+
       render
       sleep 0.1
       joystick

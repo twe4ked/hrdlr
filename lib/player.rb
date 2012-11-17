@@ -32,6 +32,7 @@ class Player
       @score_start = @x+self.width
       @high_score = [@high_score, @score].max
       @score = 0
+      Sound.play('splat')
     else
       @falling_pos = nil
     end
@@ -60,6 +61,7 @@ class Player
 
   def jump
     unless @jump_pos || @falling_pos
+      Sound.play('jump')
       @jump_pos = 0
       @y = 1
     end
@@ -83,6 +85,10 @@ class Player
   end
 
   def update_score
+    old_score = @score
     @score = self.track.get_hurdles(@score_start..@x).size
+    if @score == @high_score + 1 && @high_score != 0 && @score != old_score
+      Sound.play('high_score')
+    end
   end
 end
