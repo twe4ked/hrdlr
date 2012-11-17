@@ -46,7 +46,7 @@ class Player
   end
 
   def jump
-    unless @jump_pos
+    unless @jump_pos || @falling_pos
       @jump_pos = 0
       @y = 1
     end
