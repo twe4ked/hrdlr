@@ -7,10 +7,13 @@ require 'frame'
 
 Frame.setup
 
-track = Track.new(30, 15)
+track = Track.new(50, 15)
 player = Player.new track
+tick_count = 0
 
 while true do
+  tick_count += 1
+
   player.tick
 
   frame = Frame.new 80, 6
@@ -20,6 +23,12 @@ while true do
   frame.draw player.x-viewport_x, 2-player.y, Sprite.player(player.state)
   track.get_hurdles(viewport_x...viewport_x+80).each do |hurdle_x|
     frame.draw hurdle_x-viewport_x, 4, Sprite.hurdle
+  end
+  if (0...32).cover?(tick_count)
+    frame.draw_center 1, 'HURDLURR!!!'
+    if tick_count % 8 >= 4
+      frame.draw_center 2, 'Press <Space> to jump!'
+    end
   end
   frame.render
 
