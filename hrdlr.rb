@@ -29,7 +29,7 @@ while true do
     loop do
       key = $stdin.read_nonblock(1).ord
       case key
-      when 'q'.ord, 27 # escape
+      when 'q'.ord, 27, 3 # escape, ctrl-c
         exit
       when 32 # space
         player.jump
