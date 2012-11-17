@@ -22,7 +22,7 @@ while true do
   end
   frame.render
 
-  sleep 0.5
+  sleep 0.1
 
   begin
     loop do

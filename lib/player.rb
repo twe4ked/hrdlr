@@ -23,7 +23,7 @@ class Player
     when @jump_pos
       'jump'
     else
-      %w[normal run][self.x % 2]
+      %w[normal normal run run][self.x % 4]
     end
   end
 
