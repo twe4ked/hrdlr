@@ -14,11 +14,12 @@ while true do
   player.tick
 
   frame = Frame.new 80, 6
+  viewport_x = player.x - 4
   frame.draw 0, 0, Sprite.track_line
   frame.draw 0, 5, Sprite.track_line
-  frame.draw 4, 2-player.y, Sprite.player(player.state)
-  track.get_hurdles(0+player.x..80+player.x).each do |position|
-    frame.draw position-player.x, 4, Sprite.hurdle
+  frame.draw player.x-viewport_x, 2-player.y, Sprite.player(player.state)
+  track.get_hurdles(viewport_x...viewport_x+80).each do |hurdle_x|
+    frame.draw hurdle_x-viewport_x, 4, Sprite.hurdle
   end
   frame.render
 
