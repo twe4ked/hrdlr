@@ -59,7 +59,7 @@ class Sprite
     '#'
   end
 
-  def self.track_line
-    '-' * 80
+  def self.track_line(length)
+    '-' * length
   end
 end

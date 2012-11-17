@@ -24,7 +24,8 @@ class Game
   end
 
   def render
-    frame = Frame.new 80, 20
+    rows, columns = $stdin.winsize
+    frame = Frame.new columns, 20
 
     draw_track(frame)
     draw_player(frame)
@@ -37,8 +38,8 @@ class Game
   end
 
   def draw_track(frame)
-    frame.draw 0, 0, Sprite.track_line
-    frame.draw 0, 5, Sprite.track_line
+    frame.draw 0, 0, Sprite.track_line(frame.width)
+    frame.draw 0, 5, Sprite.track_line(frame.width)
   end
 
   def draw_player(frame)
@@ -46,7 +47,7 @@ class Game
   end
 
   def draw_hurdles(frame)
-    track.get_hurdles(viewport_x...viewport_x+80).each do |hurdle_x|
+    track.get_hurdles(viewport_x...viewport_x+frame.width).each do |hurdle_x|
       frame.draw hurdle_x-viewport_x, 4, Sprite.hurdle
     end
   end
@@ -61,10 +62,10 @@ class Game
   end
 
   def draw_score(frame)
-    frame.draw_right 74, 1, 'High score:'
-    frame.draw_right 79, 1, player.high_score.to_s
-    frame.draw_right 74, 2, 'Score:'
-    frame.draw_right 79, 2, player.score.to_s
+    frame.draw_right frame.width-6, 1, 'High score:'
+    frame.draw_right frame.width-1, 1, player.high_score.to_s
+    frame.draw_right frame.width-6, 2, 'Score:'
+    frame.draw_right frame.width-1, 2, player.score.to_s
   end
 
   def draw_other_scores(frame)
