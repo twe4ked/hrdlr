@@ -8,7 +8,7 @@ require 'frame'
 Frame.setup
 
 player = Player.new
-track = Track.new
+track = Track.new(30, 15)
 
 while true do
   player.tick
@@ -17,7 +17,7 @@ while true do
   frame.draw 0, 0, Sprite.track_line
   frame.draw 0, 5, Sprite.track_line
   frame.draw 4, 2-player.y, Sprite.player(player.state)
-  track.get_hurdles(0..80).each do |position|
+  track.get_hurdles(0+player.x..80+player.x).each do |position|
     frame.draw position-player.x, 4, Sprite.hurdle
   end
   frame.render
