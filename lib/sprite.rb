@@ -23,6 +23,22 @@ class Sprite
     SPRITE
   end
 
+  def self.player_falling
+    <<-SPRITE.gsub(/^ {4}/, '')
+       o
+     </_
+    //
+    SPRITE
+  end
+
+  def self.player_fallen
+    <<-SPRITE.gsub(/^ {4}/, '')
+
+
+    \\_\\_o
+    SPRITE
+  end
+
   def self.player(state)
     send "player_#{state}"
   end

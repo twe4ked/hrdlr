@@ -7,8 +7,8 @@ require 'frame'
 
 Frame.setup
 
-player = Player.new
 track = Track.new(30, 15)
+player = Player.new track
 
 while true do
   player.tick
