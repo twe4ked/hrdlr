@@ -30,6 +30,7 @@ class Player
       @falling_pos = 0
       @x += 1
       @score_start = @x+self.width
+      @high_score = [@high_score, @score].max
       @score = 0
     else
       @falling_pos = nil
@@ -83,6 +84,5 @@ class Player
 
   def update_score
     @score = self.track.get_hurdles(@score_start..@x).size
-    @high_score = [@high_score, @score].max
   end
 end
