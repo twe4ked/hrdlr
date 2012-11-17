@@ -7,7 +7,7 @@ class Game
   attr_reader :track, :player, :tick_count
 
   def initialize
-    @track = Track.new(50, 15)
+    @track = Track.new(50, 17)
     @player = Player.new track
     @tick_count = 0
   end
