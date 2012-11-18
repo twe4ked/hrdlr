@@ -28,9 +28,9 @@ class Game
     @frame = Frame.new columns, 20
 
     draw_track
-    draw_player
     draw_hurdles
     draw_coins
+    draw_player
     draw_title
     draw_score
     draw_other_scores
