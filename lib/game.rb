@@ -25,60 +25,60 @@ class Game
 
   def render
     rows, columns = $stdin.winsize
-    frame = Frame.new columns, 20
+    @frame = Frame.new columns, 20
 
-    draw_track(frame)
-    draw_player(frame)
-    draw_hurdles(frame)
-    draw_coins(frame)
-    draw_title(frame)
-    draw_score(frame)
-    draw_other_scores(frame)
+    draw_track
+    draw_player
+    draw_hurdles
+    draw_coins
+    draw_title
+    draw_score
+    draw_other_scores
 
-    frame.render
+    @frame.render
   end
 
-  def draw_track(frame)
-    frame.draw 0, 0, Sprite.track_line(frame.width)
-    frame.draw 0, 5, Sprite.track_line(frame.width)
+  def draw_track
+    @frame.draw 0, 0, Sprite.track_line(@frame.width)
+    @frame.draw 0, 5, Sprite.track_line(@frame.width)
   end
 
-  def draw_player(frame)
-    frame.draw player.x-viewport_x, 2-player.y, Sprite.player(player.state)
+  def draw_player
+    @frame.draw player.x-viewport_x, 2-player.y, Sprite.player(player.state)
   end
 
-  def draw_hurdles(frame)
-    track.hurdles.get(viewport_x...viewport_x+frame.width).each do |hurdle_x|
-      frame.draw hurdle_x-viewport_x, 4, Sprite.hurdle
+  def draw_hurdles
+    track.hurdles.get(viewport_x...viewport_x+@frame.width).each do |hurdle_x|
+      @frame.draw hurdle_x-viewport_x, 4, Sprite.hurdle
     end
   end
 
-  def draw_coins(frame)
-    track.coins.get(viewport_x...viewport_x+frame.width).each_with_index do |coin_x, i|
-      frame.draw coin_x-viewport_x, 1, Sprite.coin(tick_count/4 % 2 == 0)
+  def draw_coins
+    track.coins.get(viewport_x...viewport_x+@frame.width).each_with_index do |coin_x, i|
+      @frame.draw coin_x-viewport_x, 1, Sprite.coin(tick_count/4 % 2 == 0)
     end
   end
 
-  def draw_title(frame)
+  def draw_title
     if (0...32).cover?(tick_count)
-      frame.draw_center 1, 'HURDLURR!!!'
+      @frame.draw_center 1, 'HURDLURR!!!'
       if tick_count % 8 >= 4
-        frame.draw_center 2, 'Press <Space> to jump!'
+        @frame.draw_center 2, 'Press <Space> to jump!'
       end
     end
   end
 
-  def draw_score(frame)
-    frame.draw_right frame.width-1, 1, ' High score:      '
-    frame.draw_right frame.width-2, 1, player.high_score.to_s
-    frame.draw_right frame.width-1, 2, ' Score:           '
-    frame.draw_right frame.width-2, 2, player.score.to_s
+  def draw_score
+    @frame.draw_right @frame.width-1, 1, ' High score:      '
+    @frame.draw_right @frame.width-2, 1, player.high_score.to_s
+    @frame.draw_right @frame.width-1, 2, ' Score:           '
+    @frame.draw_right @frame.width-2, 2, player.score.to_s
   end
 
-  def draw_other_scores(frame)
+  def draw_other_scores
     top_ten = @others.values.sort_by(&:score).reverse.first(10)
     top_ten.each_with_index do |other, index|
-      frame.draw 0, 7+index, " #{index+1}. #{other}"
+      @frame.draw 0, 7+index, " #{index+1}. #{other}"
     end
   end
 
