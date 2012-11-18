@@ -86,7 +86,7 @@ class Game
 
   def draw_dino_ups
     track.dino_ups.get(viewport_x...viewport_x+@frame.width).each_with_index do |dino_up_x, i|
-      @frame.draw dino_up_x-viewport_x, 1, Sprite.doller(tick_count/4 % 2 == 0)
+      @frame.draw dino_up_x-viewport_x, 1, Sprite.dino_up
     end
   end
 

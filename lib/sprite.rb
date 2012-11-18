@@ -67,8 +67,8 @@ class Sprite
     flipped ? '|' : 'O'
   end
 
-  def self.doller(flipped)
-    flipped ? '|' : '$'
+  def self.dino_up
+    'D'
   end
 
   def self.multi_coin
