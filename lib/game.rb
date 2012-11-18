@@ -107,7 +107,7 @@ class Game
   end
 
   def draw_other_scores
-    top_ten = @others.values.sort_by(&:score).reverse.first(10)
+    top_ten = @others.values.sort_by { |other| [other.score, other.high_score] }.reverse.first(10)
     top_ten.each_with_index do |other, index|
       @frame.draw 0, 7+index, " #{index+1}. #{other}"
     end
