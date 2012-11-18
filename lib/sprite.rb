@@ -125,8 +125,8 @@ class Sprite
 
   def self.dino_rampage
     <<-SPRITE.gsub(/^ {4}/, '')
-    **    D I N O    **
-    ** R A M P A G E **
+    ** D I N O S A U R **
+    **  R A M P A G E  **
     SPRITE
   end
 end
