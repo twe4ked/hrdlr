@@ -67,7 +67,58 @@ class Sprite
     flipped ? '|' : 'O'
   end
 
+  def self.doller(flipped)
+    flipped ? '|' : '$'
+  end
+
   def self.multi_coin
     '** M U L T I - C O I N **'
+  end
+
+  def self.dino_run
+    <<-SPRITE.gsub(/^ {4}/, '')
+                __
+        .-^^^-/ '_)
+     __/       /
+    <__.\\_\\-\\_\\
+    SPRITE
+  end
+
+  def self.dino_normal
+    <<-SPRITE.gsub(/^ {4}/, '')
+                __
+        .-^^^-/ '_)
+     __/       /
+    <__.|_|-|_|
+    SPRITE
+  end
+
+  def self.dino_normal_fire
+    <<-SPRITE.gsub(/^ {4}/, '')
+                __
+        .-^^^-/ '_)~=~
+     __/       /
+    <__.|_|-|_|
+    SPRITE
+  end
+
+  def self.dino_run_fire
+    <<-SPRITE.gsub(/^ {4}/, '')
+                __
+        .-^^^-/ '_)=~
+     __/       /
+    <__.\\_\\-\\_\\
+    SPRITE
+  end
+
+  def self.dino(state)
+    send "dino_#{state}"
+  end
+
+  def self.dino_rampage
+    <<-SPRITE.gsub(/^ {4}/, '')
+    **    D I N O    **
+    ** R A M P A G E **
+    SPRITE
   end
 end

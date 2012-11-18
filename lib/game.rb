@@ -31,11 +31,13 @@ class Game
     draw_track
     draw_hurdles
     draw_coins
+    draw_dino_ups
     draw_player
     draw_title
     draw_score
     draw_other_scores
     draw_multi_coin
+    draw_dino_rampage
 
     @frame.render
   end
@@ -56,8 +58,18 @@ class Game
     end
   end
 
+  def draw_dino_rampage
+    if player.dino_count && player.dino_count <= 32 && tick_count % 8 >= 4
+      @frame.draw_center 2, Sprite.dino_rampage
+    end
+  end
+
   def draw_player
-    @frame.draw player.x-viewport_x, 2-player.y, Sprite.player(player.state)
+    if player.dino_count
+      @frame.draw player.x-viewport_x, 1, Sprite.dino(player.state)
+    else
+      @frame.draw player.x-viewport_x, 2-player.y, Sprite.player(player.state)
+    end
   end
 
   def draw_hurdles
@@ -69,6 +81,12 @@ class Game
   def draw_coins
     track.coins.get(viewport_x...viewport_x+@frame.width).each_with_index do |coin_x, i|
       @frame.draw coin_x-viewport_x, 1, Sprite.coin(tick_count/4 % 2 == 0)
+    end
+  end
+
+  def draw_dino_ups
+    track.dino_ups.get(viewport_x...viewport_x+@frame.width).each_with_index do |dino_up_x, i|
+      @frame.draw dino_up_x-viewport_x, 1, Sprite.doller(tick_count/4 % 2 == 0)
     end
   end
 

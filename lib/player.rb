@@ -2,6 +2,7 @@ class Player
   attr_reader :track, :x, :y, :state
   attr_reader :score, :high_score
   attr_reader :multi_coin, :coin_count
+  attr_reader :dino_count
 
   def initialize(track)
     @track = track
@@ -12,6 +13,7 @@ class Player
     @high_score = 0
     @score_start = 0
     @coin_count = 0
+    @dino_count = nil
   end
 
   def tick
@@ -24,17 +26,38 @@ class Player
       end
     end
 
+    dino_ups = self.current_dino_ups
+    if (jumping? || @dino_count) && !dino_ups.empty?
+      track.dino_ups.delete *dino_ups
+      @dino_count = 0
+      @jump_pos = nil
+    end
+    if @dino_count
+      if (0..50).cover?(@dino_count.to_i)
+        @dino_count += 1
+      else
+        @dino_count = nil
+        @dino_fire = nil
+      end
+    end
+
+    hurdles = current_hurdles
     case
     when @falling_pos && @falling_pos < 16
       @falling_pos += 1
       @x += 1 if @falling_pos < 5
-    when !@falling_pos && will_collide?
-      @falling_pos = 0
-      @x += 1
-      @high_score = [@high_score, @score].max
-      @score = 0
-      @coin_count = 0
-      Sound.play('splat')
+    when !@falling_pos && !jumping? && !hurdles.empty?
+      if @dino_count
+        track.hurdles.delete *hurdles
+        @score += 1
+      else
+        @falling_pos = 0
+        @x += 1
+        @high_score = [@high_score, @score].max
+        @score = 0
+        @coin_count = 0
+        Sound.play('splat')
+      end
     else
       @falling_pos = nil
       @score_end = @x
@@ -43,7 +66,7 @@ class Player
     @multi_coin = false
     coins = self.current_coins
     unless coins.empty?
-      if jumping?
+      if jumping? || @dino_count
         track.coins.delete *coins
         @coin_count += coins.size
         if @coin_count % 5 == 0
@@ -78,14 +101,25 @@ class Player
       %w[normal normal run run][self.x % 4]
     end
 
+    if @dino_fire
+      @state = "#{@state}_fire"
+      @dino_fire = nil
+    end
+
     update_score
   end
 
   def jump
-    unless @jump_pos || @falling_pos
-      Sound.play('jump')
-      @jump_pos = 0
-      @y = 1
+    if @dino_count
+      @dino_fire = true
+      @jump_pos = nil
+      @y = 0
+    else
+      unless @jump_pos || @falling_pos
+        Sound.play('jump')
+        @jump_pos = 0
+        @y = 1
+      end
     end
   end
 
@@ -97,18 +131,39 @@ class Player
     @@width ||= Sprite.player_run.split("\n").last.size
   end
 
+  def dino_width_head
+    @@dino_width_head ||= Sprite.dino_normal.split("\n").first.size
+  end
+
+  def dino_width_feet
+    @@dino_width_feet ||= Sprite.dino_normal.split("\n").last.size
+  end
+
   def hit_range
     self.x+1...self.x+self.width
   end
 
-  def will_collide?
-    range = self.x+2..self.x+self.width
-    !jumping? && !track.hurdles.get(range).empty?
+  def current_hurdles
+    range = if @dino_count
+      self.x+2..self.x+self.dino_width_feet
+    else
+      self.x+2..self.x+self.width
+    end
+    track.hurdles.get(range)
   end
 
   def current_coins
-    range = self.x+1..self.x+1
+    range = if @dino_count
+      self.x+1..self.x+1+self.dino_width_head
+    else
+      self.x+1..self.x+1
+    end
     track.coins.get(range)
+  end
+
+  def current_dino_ups
+    range = self.x+1..self.x+1
+    track.dino_ups.get(range)
   end
 
   def update_score
