@@ -1,7 +1,7 @@
 class Player
   attr_reader :track, :x, :y, :state
   attr_reader :score, :high_score
-  attr_reader :multi_coin, :coin_count
+  attr_reader :multi_coin, :coin_count, :coin_multiplier
   attr_reader :dino_count
 
   def initialize(track)
@@ -14,6 +14,7 @@ class Player
     @score_start = 0
     @coin_count = 0
     @dino_count = nil
+    @coin_multiplier = 1
   end
 
   def tick
@@ -55,6 +56,7 @@ class Player
         @high_score = [@high_score, @score].max
         @score = 0
         @coin_count = 0
+        @coin_multiplier = 1
         Sound.play('splat')
       end
     else
@@ -72,8 +74,9 @@ class Player
           @score += coins.size*5
           Sound.play('multi_coin')
           @multi_coin = true
+          @coin_multiplier += 1
         else
-          @score += coins.size
+          @score += coins.size * @coin_multiplier
           Sound.play('coin_get')
         end
       else

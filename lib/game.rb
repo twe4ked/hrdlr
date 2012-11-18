@@ -104,6 +104,9 @@ class Game
     @frame.draw_right @frame.width-2, 1, player.high_score.to_s
     @frame.draw_right @frame.width-1, 2, ' Score:           '
     @frame.draw_right @frame.width-2, 2, player.score.to_s
+    if player.coin_multiplier > 1 && tick_count % 8 >= 4
+      @frame.draw_right @frame.width-2, 4, "coins x#{player.coin_multiplier}"
+    end
   end
 
   def draw_other_scores
