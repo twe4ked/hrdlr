@@ -109,12 +109,16 @@ class Game
     end
   end
 
+  def display_coins(coin_multiplier)
+    "(coins x#{coin_multiplier})" if coin_multiplier && coin_multiplier > 1
+  end
+
   def draw_other_scores
     @frame.draw 1, 7, 'Players'
     oldest_timestamp = Time.now - 5
     top_ten = @others.values.select { |other| other.timestamp >= oldest_timestamp }.sort_by { |other| [other.score, other.high_score] }.reverse.first(10)
     top_ten.each_with_index do |other, index|
-      @frame.draw 1, 9+index, "#{index+1}. #{other.me? ? '***' : '   '} #{other.hostname}: #{other.score}"
+      @frame.draw 1, 9+index, "#{index+1}. #{other.me? ? '***' : '   '} #{other.hostname}: #{other.score} #{display_coins(other.coin_multiplier)}"
     end
 
     @frame.draw @frame.width/2, 7, 'Leaderboard'
@@ -159,7 +163,8 @@ class Game
     data = {
       hostname: self.class.hostname,
       score: self.player.score,
-      high_score: self.player.high_score
+      high_score: self.player.high_score,
+      coin_multiplier: self.player.coin_multiplier
     }
 
     begin
