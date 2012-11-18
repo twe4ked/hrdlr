@@ -96,6 +96,8 @@ class Player
       %w[recover hidden][@falling_pos % 2]
     when @falling_pos
       'fallen'
+    when @dino_count && @dino_count > 32
+      %w[normal hidden run hidden][@dino_count/2 % 4]
     else
       %w[normal normal run run][self.x % 4]
     end

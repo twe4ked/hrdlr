@@ -93,6 +93,10 @@ class Sprite
     SPRITE
   end
 
+  def self.dino_hidden
+    ''
+  end
+
   def self.dino_normal_fire
     <<-SPRITE.gsub(/^ {4}/, '')
                 __
@@ -109,6 +113,10 @@ class Sprite
      __/       /
     <__.\\_\\-\\_\\
     SPRITE
+  end
+
+  def self.dino_hidden_fire
+    ''
   end
 
   def self.dino(state)
