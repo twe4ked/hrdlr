@@ -30,6 +30,7 @@ class Game
     draw_track(frame)
     draw_player(frame)
     draw_hurdles(frame)
+    draw_coins(frame)
     draw_title(frame)
     draw_score(frame)
     draw_other_scores(frame)
@@ -49,6 +50,12 @@ class Game
   def draw_hurdles(frame)
     track.hurdles.get(viewport_x...viewport_x+frame.width).each do |hurdle_x|
       frame.draw hurdle_x-viewport_x, 4, Sprite.hurdle
+    end
+  end
+
+  def draw_coins(frame)
+    track.coins.get(viewport_x...viewport_x+frame.width).each_with_index do |coin_x, i|
+      frame.draw coin_x-viewport_x, 1, Sprite.coin(tick_count/4 % 2 == 0)
     end
   end
 

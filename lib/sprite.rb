@@ -62,4 +62,8 @@ class Sprite
   def self.track_line(length)
     '-' * length
   end
+
+  def self.coin(flipped)
+    flipped ? '|' : 'O'
+  end
 end

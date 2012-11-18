@@ -10,6 +10,7 @@ class Player
     @score = 0
     @high_score = 0
     @score_start = 0
+    @coin_count = 0
   end
 
   def tick
@@ -32,9 +33,17 @@ class Player
       @score_start = @x+self.width
       @high_score = [@high_score, @score].max
       @score = 0
+      @coin_count = 0
       Sound.play('splat')
     else
       @falling_pos = nil
+    end
+
+    coins = self.current_coins
+    unless coins.empty?
+      @coin_count += coins.size
+      track.coins.delete *coins
+      Sound.play('coin_get')
     end
 
     unless @falling_pos
@@ -84,11 +93,21 @@ class Player
     !jumping? && !track.hurdles.get(range).empty?
   end
 
+  def current_coins
+    if jumping?
+      range = self.x+1..self.x+1
+      track.coins.get(range)
+    else
+      []
+    end
+  end
+
   def update_score
     old_score = @score
     @score = self.track.hurdles.get(@score_start..@x).size
     if @score == @high_score + 1 && @high_score != 0 && @score != old_score
       Sound.play('high_score')
     end
+    @score += @coin_count
   end
 end

@@ -5,6 +5,7 @@ class Items
     @initial = initial
     @step_range = step_range
     @items = [self.initial]
+    @deleted = []
   end
 
   def get(range)
@@ -15,6 +16,10 @@ class Items
     if @items.size > 1000
       @items = @items[-1000..-1]
     end
-    @items.select { |x| range.cover?(x) }
+    @items.select { |x| range.cover?(x) } - @deleted
+  end
+
+  def delete(*indexes)
+    @deleted |= indexes
   end
 end
