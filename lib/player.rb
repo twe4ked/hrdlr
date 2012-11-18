@@ -88,6 +88,10 @@ class Player
       @x += 1
     end
 
+    if @dino_count
+      @x += 1
+    end
+
     @state = case
     when @jump_pos
       'jump'
