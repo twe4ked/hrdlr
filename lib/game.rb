@@ -107,10 +107,17 @@ class Game
   end
 
   def draw_other_scores
+    @frame.draw 1, 7, 'Players'
     oldest_timestamp = Time.now - 5
     top_ten = @others.values.select { |other| other.timestamp >= oldest_timestamp }.sort_by { |other| [other.score, other.high_score] }.reverse.first(10)
     top_ten.each_with_index do |other, index|
-      @frame.draw 0, 7+index, " #{index+1}. #{other}"
+      @frame.draw 1, 9+index, "#{index+1}. #{other.me? ? '***' : '   '} #{other.hostname}: #{other.score}"
+    end
+
+    @frame.draw @frame.width/2, 7, 'Leaderboard'
+    high_scores = @others.values.select { |other| other.max_score > 0 }.sort_by(&:max_score).reverse.first(10)
+    high_scores.each_with_index do |other, index|
+      @frame.draw @frame.width/2, 9+index, "#{index+1}. #{other.me? ? '***' : '   '} #{other.hostname}: #{other.max_score}"
     end
   end
 

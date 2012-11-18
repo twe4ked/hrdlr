@@ -13,7 +13,7 @@ class OtherPlayer
     hostname == Game.hostname
   end
 
-  def to_s
-    "#{me? ? '***' : '   '} #{hostname}: #{score} (high score: #{high_score})"
+  def max_score
+    [self.score, self.high_score].max
   end
 end
