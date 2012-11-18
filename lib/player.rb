@@ -17,13 +17,11 @@ class Player
   end
 
   def tick
-    if @jump_pos
-      if @jump_pos < 4
-        @jump_pos += 1
-      else
-        @jump_pos = nil
-        @y = 0
-      end
+    if @jump_pos && @jump_pos < 4
+      @jump_pos += 1
+    else
+      @jump_pos = nil
+      @y = 0
     end
 
     dino_ups = self.current_dino_ups
