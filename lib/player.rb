@@ -30,18 +30,17 @@ class Player
     when !@falling_pos && will_collide?
       @falling_pos = 0
       @x += 1
-      @score_start = @x+self.width
       @high_score = [@high_score, @score].max
       @score = 0
-      @coin_count = 0
       Sound.play('splat')
     else
       @falling_pos = nil
+      @score_end = @x
     end
 
     coins = self.current_coins
     unless coins.empty?
-      @coin_count += coins.size
+      @score += coins.size
       track.coins.delete *coins
       Sound.play('coin_get')
     end
@@ -104,10 +103,10 @@ class Player
 
   def update_score
     old_score = @score
-    @score = self.track.hurdles.get(@score_start..@x).size
+    @score += self.track.hurdles.get(@score_start..@score_end).size
+    @score_start = @x
     if @score == @high_score + 1 && @high_score != 0 && @score != old_score
       Sound.play('high_score')
     end
-    @score += @coin_count
   end
 end
