@@ -1,4 +1,9 @@
-require 'io/console'
+begin
+  require 'io/console'
+rescue LoadError
+  puts "Hrdlr requires Ruby 1.9.3 or later."
+  exit 1
+end
 
 class Frame
   attr_reader :rows
