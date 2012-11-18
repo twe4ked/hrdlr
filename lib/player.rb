@@ -18,13 +18,62 @@ class Player
   end
 
   def tick
-    if @jump_pos && @jump_pos < 4
-      @jump_pos += 1
+    tick_jump_pos
+    tick_dino_rampage
+    tick_hurdles
+    tick_multi_coin
+    tick_x_pos
+    tick_state
+    tick_score
+  end
+
+  def tick_multi_coin
+    @multi_coin = false
+    coins = self.current_coins
+    unless coins.empty?
+      if jumping? || @dino_count
+        track.coins.delete *coins
+        @coin_count += coins.size
+        if @coin_count % 5 == 0
+          @score += coins.size*5
+          Sound.play('multi_coin')
+          @multi_coin = true
+          @coin_multiplier += 1
+        else
+          @score += coins.size * @coin_multiplier
+          Sound.play('coin_get')
+        end
+      else
+        @coin_count = 0
+      end
+    end
+  end
+
+  def tick_state
+    @state = case
+    when @jump_pos
+      'jump'
+    when @falling_pos == 0
+      'falling'
+    when @falling_pos && @falling_pos > 12
+      %w[normal hidden][@falling_pos % 2]
+    when @falling_pos && @falling_pos > 8
+      %w[recover hidden][@falling_pos % 2]
+    when @falling_pos
+      'fallen'
+    when @dino_count && @dino_count > 80
+      %w[normal hidden run hidden][@dino_count/2 % 4]
     else
-      @jump_pos = nil
-      @y = 0
+      %w[normal normal run run][self.x % 4]
     end
 
+    if @dino_fire
+      @state = "#{@state}_fire"
+      @dino_fire = nil
+    end
+  end
+
+  def tick_dino_rampage
     dino_ups = self.current_dino_ups
     if (jumping? || @dino_count) && !dino_ups.empty?
       track.dino_ups.delete *dino_ups
@@ -40,7 +89,9 @@ class Player
         @dino_fire = nil
       end
     end
+  end
 
+  def tick_hurdles
     hurdles = current_hurdles
     case
     when @falling_pos && @falling_pos < 16
@@ -63,58 +114,6 @@ class Player
       @falling_pos = nil
       @score_end = @x
     end
-
-    @multi_coin = false
-    coins = self.current_coins
-    unless coins.empty?
-      if jumping? || @dino_count
-        track.coins.delete *coins
-        @coin_count += coins.size
-        if @coin_count % 5 == 0
-          @score += coins.size*5
-          Sound.play('multi_coin')
-          @multi_coin = true
-          @coin_multiplier += 1
-        else
-          @score += coins.size * @coin_multiplier
-          Sound.play('coin_get')
-        end
-      else
-        @coin_count = 0
-      end
-    end
-
-    unless @falling_pos
-      @x += 1
-    end
-
-    if @dino_count
-      @x += 1
-    end
-
-    @state = case
-    when @jump_pos
-      'jump'
-    when @falling_pos == 0
-      'falling'
-    when @falling_pos && @falling_pos > 12
-      %w[normal hidden][@falling_pos % 2]
-    when @falling_pos && @falling_pos > 8
-      %w[recover hidden][@falling_pos % 2]
-    when @falling_pos
-      'fallen'
-    when @dino_count && @dino_count > 80
-      %w[normal hidden run hidden][@dino_count/2 % 4]
-    else
-      %w[normal normal run run][self.x % 4]
-    end
-
-    if @dino_fire
-      @state = "#{@state}_fire"
-      @dino_fire = nil
-    end
-
-    update_score
   end
 
   def jump
@@ -128,6 +127,20 @@ class Player
         @jump_pos = 0
         @y = 1
       end
+    end
+  end
+
+  def tick_x_pos
+    @x += 1 unless @falling_pos
+    @x += 1 if @dino_count
+  end
+
+  def tick_jump_pos
+    if @jump_pos && @jump_pos < 4
+      @jump_pos += 1
+    else
+      @jump_pos = nil
+      @y = 0
     end
   end
 
@@ -174,7 +187,7 @@ class Player
     track.dino_ups.get(range)
   end
 
-  def update_score
+  def tick_score
     old_score = @score
     @score += self.track.hurdles.get(@score_start..@score_end).size
     @score_start = @x
