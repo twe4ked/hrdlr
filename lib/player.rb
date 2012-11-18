@@ -32,7 +32,7 @@ class Player
       Sound.play('dino_rampage')
     end
     if @dino_count
-      if (0..50).cover?(@dino_count.to_i)
+      if (0..100).cover?(@dino_count.to_i)
         @dino_count += 1
       else
         @dino_count = nil
@@ -96,7 +96,7 @@ class Player
       %w[recover hidden][@falling_pos % 2]
     when @falling_pos
       'fallen'
-    when @dino_count && @dino_count > 32
+    when @dino_count && @dino_count > 80
       %w[normal hidden run hidden][@dino_count/2 % 4]
     else
       %w[normal normal run run][self.x % 4]
