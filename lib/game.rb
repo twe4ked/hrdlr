@@ -149,7 +149,11 @@ class Game
       score: self.player.score,
       high_score: self.player.high_score
     }
-    @socket.send data.to_yaml, 0, '255.255.255.255', 47357
+
+    begin
+      @socket.send data.to_yaml, 0, '255.255.255.255', 47357
+    rescue Errno::EHOSTUNREACH
+    end
   end
 
   def joystick
