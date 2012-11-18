@@ -139,13 +139,13 @@ class Game
   rescue Errno::EAGAIN
   end
 
-  def hostname
+  def self.hostname
     @@hostname ||= `hostname -s`.strip
   end
 
   def send_update
     data = {
-      hostname: self.hostname,
+      hostname: self.class.hostname,
       score: self.player.score,
       high_score: self.player.high_score
     }

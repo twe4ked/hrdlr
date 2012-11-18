@@ -7,7 +7,11 @@ class OtherPlayer
     @high_score = data[:high_score]
   end
 
+  def me?
+    hostname == Game.hostname
+  end
+
   def to_s
-    "#{hostname}: #{score} (high score: #{high_score})"
+    "#{me? ? '***' : '   '} #{hostname}: #{score} (high score: #{high_score})"
   end
 end
