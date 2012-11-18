@@ -1,6 +1,7 @@
 class Player
   attr_reader :track, :x, :y, :state
   attr_reader :score, :high_score
+  attr_reader :multi_coin, :coin_count
 
   def initialize(track)
     @track = track
@@ -32,17 +33,30 @@ class Player
       @x += 1
       @high_score = [@high_score, @score].max
       @score = 0
+      @coin_count = 0
       Sound.play('splat')
     else
       @falling_pos = nil
       @score_end = @x
     end
 
+    @multi_coin = false
     coins = self.current_coins
     unless coins.empty?
-      @score += coins.size
-      track.coins.delete *coins
-      Sound.play('coin_get')
+      if jumping?
+        track.coins.delete *coins
+        @coin_count += coins.size
+        if @coin_count % 5 == 0
+          @score += coins.size*5
+          Sound.play('multi_coin')
+          @multi_coin = true
+        else
+          @score += coins.size
+          Sound.play('coin_get')
+        end
+      else
+        @coin_count = 0
+      end
     end
 
     unless @falling_pos
@@ -93,12 +107,8 @@ class Player
   end
 
   def current_coins
-    if jumping?
-      range = self.x+1..self.x+1
-      track.coins.get(range)
-    else
-      []
-    end
+    range = self.x+1..self.x+1
+    track.coins.get(range)
   end
 
   def update_score

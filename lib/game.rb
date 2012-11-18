@@ -21,6 +21,7 @@ class Game
   def tick
     @tick_count += 1
     player.tick
+    @multi_coin = 0 if player.multi_coin
   end
 
   def render
@@ -34,6 +35,7 @@ class Game
     draw_title
     draw_score
     draw_other_scores
+    draw_multi_coin
 
     @frame.render
   end
@@ -41,6 +43,17 @@ class Game
   def draw_track
     @frame.draw 0, 0, Sprite.track_line(@frame.width)
     @frame.draw 0, 5, Sprite.track_line(@frame.width)
+  end
+
+  def draw_multi_coin
+    if @multi_coin
+      if tick_count % 8 >= 4
+        @frame.draw_center 2, Sprite.multi_coin
+        @frame.draw_center 3, "** #{player.coin_count} coins **"
+      end
+      @multi_coin += 1
+      @multi_coin = nil if @multi_coin >= 32
+    end
   end
 
   def draw_player

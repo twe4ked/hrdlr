@@ -66,4 +66,8 @@ class Sprite
   def self.coin(flipped)
     flipped ? '|' : 'O'
   end
+
+  def self.multi_coin
+    '** M U L T I - C O I N **'
+  end
 end
