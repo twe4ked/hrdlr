@@ -29,6 +29,7 @@ class Player
       track.dino_ups.delete *dino_ups
       @dino_count = 0
       @jump_pos = nil
+      Sound.play('dino_rampage')
     end
     if @dino_count
       if (0..50).cover?(@dino_count.to_i)
