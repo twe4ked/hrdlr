@@ -143,7 +143,8 @@ class Game
       begin
         data, addr = @socket.recvfrom_nonblock 8192
         data = YAML.load(data)
-        @others[addr] = OtherPlayer.new(data)
+        other = OtherPlayer.new(data)
+        @others[other.hostname] = other
       rescue Psych::SyntaxError
       end
     end
